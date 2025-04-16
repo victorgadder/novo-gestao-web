@@ -75,8 +75,9 @@ sidenav: any;
     if (storedUser) {
       try {
         const userInfo = JSON.parse(storedUser);
+        console.log('userInfo do localStorage:', userInfo);
         this.userName = userInfo.usuario.nome || 'Usuário';
-        this.userId = userInfo.usuarioId || null;
+        this.userId = userInfo.usuario?.usuarioId || null;
         this.userAvatar = userInfo.avatar || '';
       } catch (error) {
         console.error('Erro ao processar os dados do usuário no localStorage:', error);
@@ -112,8 +113,14 @@ sidenav: any;
   }
 
   navigateToProfile(): void {
-    this.router.navigate(['/home/profile']);
+    if (this.userId) {
+      this.router.navigate(['/home/profile', this.userId]);
+    } else {
+      console.warn('ID do usuário não encontrado. Redirecionando para /home/profile');
+      this.router.navigate(['/home/profile']);
+    }
   }
+  
 
   toggleUserMenu(event: Event): void {
     this.contextMenu.toggle(event);

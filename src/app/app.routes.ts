@@ -94,11 +94,11 @@ export const routes: Routes = [
           },
         ],
       },
-  //     {
-  //       path: 'profile',
-  //       loadComponent: () =>
-  //         import('./pages/users/form-user/form-user.component').then((m) => m.FormUserComponent),
-  //     },
+      {
+        path: 'profile/:id',
+        loadComponent: () =>
+          import('./pages/users/form-user/form-user.component').then((m) => m.FormUserComponent),
+      },
       {
         path: '',
         redirectTo: 'articles',

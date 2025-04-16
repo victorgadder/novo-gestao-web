@@ -47,7 +47,6 @@ export class FormUserComponent implements OnInit {
       this.isEditMode = true;
       const loggedUser = this.authService.getUserInfo()?.usuario;
       if (loggedUser) {
-        loggedUser.avatar = this.getAvatarUrl(loggedUser.avatar);
         this.userForm.patchValue(loggedUser);
       }
     } else {
@@ -61,8 +60,6 @@ export class FormUserComponent implements OnInit {
 
   private loadUser(userId: string): void {
     this.userService.getUsersById(userId).subscribe(user => {
-      console.log('Usuário retornado do backend:', user);
-      user.avatar = this.getAvatarUrl(user.avatar);
       this.usuario = user;
       this.userForm.patchValue(user);
       this.avatarBase64 = user.avatar;
@@ -71,24 +68,21 @@ export class FormUserComponent implements OnInit {
 
   getAvatarUrl(avatar: string | null): string {
     if (!avatar) {
-      return 'assets/img/default-avatar.png';
+      return `assets/logo_icon.svg`;
     }
-
+  
     if (avatar.startsWith('data:image')) {
-      const base64 = avatar.split(',')[1];
-      if (base64 && base64.length > 100) {
-        return avatar;
-      }
-      const filename = base64;
-      return `https://gestao-hml.azurewebsites.net/uploads/avatars/${filename}`;
+      return avatar; // imagem já está em base64
     }
-
+  
     if (avatar.startsWith('http')) {
-      return avatar;
+      return avatar; // já é uma URL completa
     }
-
+  
+    // caso venha só o nome do arquivo
     return `https://gestao-hml.azurewebsites.net/uploads/avatars/${avatar}`;
   }
+  
 
   triggerFileInput(): void {
     const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
@@ -160,7 +154,7 @@ export class FormUserComponent implements OnInit {
     this.userService.postUser(formData).subscribe({
       next: () => {
         Swal.fire('Sucesso', 'Usuário cadastrado com sucesso!', 'success');
-        this.router.navigate(['/home/users']);
+        this.router.navigate(this.isProfileEdit ? ['/home'] : ['/home/users']);
       },
       error: () => {
         Swal.fire('Erro', 'Erro ao cadastrar usuário!', 'error');
@@ -173,15 +167,19 @@ export class FormUserComponent implements OnInit {
     this.userService.putUser(formData.id, formData).subscribe({
       next: () => {
         Swal.fire('Sucesso', 'Usuário editado com sucesso!', 'success');
-        this.router.navigate(['/home/users']);
+        const redirectPath = this.isProfileEdit ? '/home/profile' : '/home/users';
+        this.router.navigate(this.isProfileEdit ? ['/home'] : ['/home/users']);
       },
       error: () => {
         Swal.fire('Erro', 'Erro ao editar usuário!', 'error');
       }
     });
   }
+  
 
   onCancel(): void {
+    const targetRoute = this.isProfileEdit ? ['/home'] : ['/home/users'];
+  
     if (this.userForm.dirty) {
       Swal.fire({
         title: 'Alterações não salvas',
@@ -192,11 +190,13 @@ export class FormUserComponent implements OnInit {
         cancelButtonText: 'Continuar'
       }).then(result => {
         if (result.isConfirmed) {
-          this.router.navigate(['/home/users']);
+          this.router.navigate(targetRoute);
         }
       });
     } else {
-      this.router.navigate(['/home/users']);
+      this.router.navigate(targetRoute);
     }
   }
+  
+  
 }

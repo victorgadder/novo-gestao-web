@@ -8,26 +8,27 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class UsersService {
-  api = `${environment.apiUrl}Usuarios`;
+  private readonly api = `${environment.apiUrl}Usuarios`;
 
-  constructor(private clienteHttp: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getUsers(): Observable<User> {
-    return this.clienteHttp.get<User>(this.api + '/');
+    return this.http.get<User>(`${this.api}/`);
   }
+
   getUsersById(idUser: string): Observable<User> {
-    return this.clienteHttp.get<User>(this.api + '/' + idUser);
+    return this.http.get<User>(`${this.api}/${idUser}`);
   }
 
-  postUser(newUser: FormData): Observable<User>{
-    return this.clienteHttp.post<User>(this.api + '/', newUser)
+  postUser(newUser: User): Observable<User> {
+    return this.http.post<User>(`${this.api}/`, newUser);
   }
 
-  putUser(idUser: string, newUser: User): Observable<User>{
-    return this.clienteHttp.put<User>(this.api + '/' + idUser, newUser)
+  putUser(idUser: string, updatedUser: User): Observable<User> {
+    return this.http.put<User>(`${this.api}/${idUser}`, updatedUser);
   }
 
-  deleteUser(idUser: string): Observable<object>{
-    return this.clienteHttp.delete(this.api + '/' + idUser)
+  deleteUser(idUser: string): Observable<object> {
+    return this.http.delete(`${this.api}/${idUser}`);
   }
 }

@@ -14,11 +14,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class FormArticleComponent {
   articleForm: FormGroup;
-  imagemCapa: string | null = null; // Para armazenar imagem de capa em base64
-  imagemPrincipal: string | null = null; // Para armazenar imagem principal em base64
-  paragrafoFiles: { [key: number]: string | null } = {}; // Armazena arquivos de imagem para parágrafos
-  articleId: string | null = null; // ID do artigo a ser editado
-  isEditMode: boolean = false; // Controle do modo de edição
+  imagemCapa: string | null = null;
+  imagemPrincipal: string | null = null;
+  paragrafoFiles: { [key: number]: string | null } = {};
+  articleId: string | null = null;
+  isEditMode: boolean = false;
   autores: any[] = [];
   artigo: any;
 
@@ -32,25 +32,24 @@ export class FormArticleComponent {
       id: [null],
       titulo: ['', Validators.required],
       resumo: ['', Validators.required],
-      imagemCapa: [''], // Armazenar imagem de capa em base64
-      imagem: [''], // Armazenar imagem principal em base64
+      imagemCapa: [''],
+      imagem: [''],
       data: ['', Validators.required],
       ativo: [true],
       autorId: ['', Validators.required],
-      itens: this.fb.array([]) // Inicia com o FormArray vazio
+      itens: this.fb.array([])
     });
   }
 
   ngOnInit(): void {
     this.loadAutores();
-    this.articleId = this.route.snapshot.paramMap.get('id'); // Obtem o ID da URL
+    this.articleId = this.route.snapshot.paramMap.get('id');
     if (this.articleId) {
       this.isEditMode = true;
-      this.loadArticle(this.articleId); // Carrega os dados do artigo para edição
+      this.loadArticle(this.articleId);
     }
   }
 
-  // Carrega os dados do artigo
   private loadArticle(articleId: string): void {
     this.articleService.getArticlesById(articleId).subscribe(article => {
       this.artigo = article;
@@ -74,7 +73,7 @@ export class FormArticleComponent {
 
   private createItem(item?: any): FormGroup {
     return this.fb.group({
-      tipo: [item?.tipo || 0], // 0 = Texto, 1 = Imagem
+      tipo: [item?.tipo || 0],
       texto: [item?.texto || ''],
       imagem: [item?.imagem || '']
     });
@@ -99,15 +98,17 @@ export class FormArticleComponent {
       const reader = new FileReader();
       reader.onload = () => {
         const base64String = reader.result as string;
+        const base64Data = base64String.split(',')[1];
+
         if (field === 'imagemCapa') {
-          this.imagemCapa = base64String.split(',')[1]; // Armazena apenas a parte base64
+          this.imagemCapa = base64Data;
         } else if (field === 'imagemPrincipal') {
-          this.imagemPrincipal = base64String.split(',')[1]; // Armazena apenas a parte base64
+          this.imagemPrincipal = base64Data;
         } else if (index !== undefined) {
-          this.paragrafoFiles[index] = base64String.split(',')[1]; // Armazena imagem do parágrafo
+          this.paragrafoFiles[index] = base64Data;
         }
       };
-      reader.readAsDataURL(file); // Lê o arquivo como uma URL de dados
+      reader.readAsDataURL(file);
     }
   }
 
@@ -123,36 +124,34 @@ export class FormArticleComponent {
 
   private async onCreate(): Promise<void> {
     this.createFormData();
-    const formData = this.articleForm.value;
+    const formData = this.articleForm.getRawValue();
     await this.articleService.postArticles(formData).toPromise();
     Swal.fire('Sucesso!', 'Artigo cadastrado com sucesso.', 'success');
+    this.articleForm.reset();
+    this.articleForm.setControl('itens', this.fb.array([]));
     this.router.navigate(['/home/artigos']);
   }
 
   private async onEdit(): Promise<void> {
     this.createFormData();
-    const formData = this.articleForm.value;
+    const formData = this.articleForm.getRawValue();
     await this.articleService.putArticles(formData.id, formData).toPromise();
     Swal.fire('Sucesso!', 'Artigo editado com sucesso.', 'success');
     this.router.navigate(['/home/artigos']);
   }
 
   private createFormData() {
-    this.articleForm.value.imagem = this.imagemPrincipal || '';
-    this.articleForm.value.imagemCapa = this.imagemCapa || '';
-    // Itera sobre os parágrafos para incluir as imagens
-    const itens = this.articleForm.value.itens.map((item: any) => ({
+    const formValue = this.articleForm.getRawValue();
+
+    formValue.imagem = this.imagemPrincipal || '';
+    formValue.imagemCapa = this.imagemCapa || '';
+
+    formValue.itens = formValue.itens.map((item: any, index: number) => ({
       ...item,
-      imagem: this.paragrafoFiles[item.index] || null
+      imagem: item.tipo === 1 ? this.paragrafoFiles[index] || '' : ''
     }));
 
-    itens.forEach((item:any) => {
-      if (item.tipo === 1 && item.imagem) {
-        this.articleForm.value.itens[`${item.index}`].imagem = item.imagem; // Adiciona a imagem ao FormData
-      }
-      this.articleForm.value.itens[`${item.index}`].tipo = item.tipo;
-      this.articleForm.value.itens[`${item.index}`].texto = item.texto;
-    });
+    this.articleForm.patchValue(formValue);
   }
 
   private loadAutores(): void {
@@ -162,22 +161,32 @@ export class FormArticleComponent {
   }
 
   onTipoChange(event: Event, item: AbstractControl): void {
-    const tipo = Number((event.target as HTMLSelectElement).value); // Converte o valor para número
-    item.get('tipo')?.setValue(tipo); // Atualiza o valor do tipo corretamente
-  
+    const tipo = Number((event.target as HTMLSelectElement).value);
+    item.get('tipo')?.setValue(tipo);
+
     if (tipo === 0) {
-      // Limpa o campo de imagem ao mudar para texto
       item.get('imagem')?.setValue(null);
     } else {
-      // Limpa o campo de texto ao mudar para imagem
       item.get('texto')?.setValue('');
     }
   }
 
   onCancel(): void {
-    this.router.navigate(['/home/articles']);
-  }
-  
+      if (this.articleForm.dirty) {
+        Swal.fire({
+          title: 'Alterações não salvas',
+          text: 'Você tem certeza que deseja sair? As alterações feitas serão perdidas.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sair assim mesmo',
+          cancelButtonText: 'Continuar'
+        }).then(result => {
+          if (result.isConfirmed) {
+            this.router.navigate(['/home/students']);
+          }
+        });
+      } else {
+        this.router.navigate(['/home/students']);
+      }
+    }
 }
-
-

@@ -3,12 +3,7 @@
 
   <div class="form-group mb-4 col-md-4">
     <div class="avatar-container" (click)="triggerFileInput()">
-      <img
-        *ngIf="avatarBase64; else defaultIcon"
-        [src]="avatarBase64"
-        class="avatar-img"
-        alt="Avatar"
-      />
+      <img [src]="getAvatarUrl(avatarBase64 || userForm.get('avatar')?.value)" alt="Avatar" class="img-thumbnail" />
       <ng-template #defaultIcon>
         <i class="pi pi-user avatar-icon"></i>
       </ng-template>
@@ -19,13 +14,8 @@
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="mt-4" novalidate>
     <div class="form-group mb-3">
       <label for="nome">Nome <span class="text-danger">*</span></label>
-      <input
-        id="nome"
-        class="form-control"
-        formControlName="nome"
-        placeholder="Digite o nome completo"
-        [ngClass]="{ 'is-invalid': userForm.get('nome')?.invalid && userForm.get('nome')?.touched }"
-      />
+      <input id="nome" class="form-control" formControlName="nome" placeholder="Digite o nome completo"
+        [ngClass]="{ 'is-invalid': userForm.get('nome')?.invalid && userForm.get('nome')?.touched }" />
       <div class="invalid-feedback" *ngIf="userForm.get('nome')?.invalid && userForm.get('nome')?.touched">
         O nome é obrigatório.
       </div>
@@ -33,14 +23,8 @@
 
     <div class="form-group mb-4">
       <label for="email">Email <span class="text-danger">*</span></label>
-      <input
-        id="email"
-        class="form-control"
-        type="email"
-        formControlName="email"
-        placeholder="exemplo@email.com"
-        [ngClass]="{ 'is-invalid': userForm.get('email')?.invalid && userForm.get('email')?.touched }"
-      />
+      <input id="email" class="form-control" type="email" formControlName="email" placeholder="exemplo@email.com"
+        [ngClass]="{ 'is-invalid': userForm.get('email')?.invalid && userForm.get('email')?.touched }" />
       <div class="invalid-feedback" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
         <span *ngIf="userForm.get('email')?.errors?.['required']">O email é obrigatório.</span>
         <span *ngIf="userForm.get('email')?.errors?.['email']">Formato de email inválido.</span>

@@ -55,7 +55,7 @@
           <textarea formControlName="texto" class="form-control" rows="5" placeholder="Texto do parágrafo"></textarea>
         </div>
 
-        <div *ngIf="item.get('tipo')?.value === 1" class="form-group">
+        <div *ngIf="item.get('tipo')?.value === 1" [ngClass]="{'bg-light p-3': true}" class="form-group">
           <label>Imagem</label>
           <input type="file" class="form-control" (change)="onFileSelect($event, 'imagem', i)">
         </div>
@@ -67,13 +67,11 @@
     </div>
 
     <div class="d-flex justify-content-between mt-4">
-      
-
       <div class="d-flex gap-2">
         <button type="button" class="btn btn-outline-secondary" (click)="addItem()">
           <i class="pi pi-plus me-2"></i> Adicionar Parágrafo
         </button>
-        
+
         <button type="button" class="btn button_primary pe-4 ps-4 pt-2 pb-2" (click)="onCancel()">
           <i class="pi pi-arrow-left me-2"></i> Voltar
         </button>
@@ -87,4 +85,4 @@
   </form>
 </div>
 
-<pre>Artigo: {{ articleForm.getRawValue() | json }}</pre>
+<!-- <pre>Artigo: {{ articleForm.getRawValue() | json }}</pre> -->
