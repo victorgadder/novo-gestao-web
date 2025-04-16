@@ -1,0 +1,104 @@
+<div class="container">
+    <h1 class="mb-4 titulo">{{ isEditMode ? 'Editar Aluno' : 'Novo Aluno' }}</h1>
+  
+    <!-- Avatar -->
+    <div class="form-group mb-4 col-md-4 col-12 d-flex justify-content-center">
+      <div class="avatar-container" (click)="triggerFileInput()">
+        <img *ngIf="studentForm.get('avatar')?.value; else avatarBase64" [src]="studentForm.get('avatar')?.value" class="avatar-img" alt="Avatar">
+        <ng-template #avatarBase64>
+          <img *ngIf="studentForm.get('avatarBase64')?.value" [src]="studentForm.get('avatarBase64')?.value" class="avatar-img" alt="AvatarBase64">
+        </ng-template>
+        <i *ngIf="!studentForm.get('avatar')?.value && !studentForm.get('avatarBase64')?.value" class="pi pi-user avatar-icon"></i>
+      </div>
+      <input #fileInput type="file" style="display: none;" (change)="onFileSelect($event)" />
+    </div>
+  
+    <form [formGroup]="studentForm" (ngSubmit)="onSubmit()">
+      <div class="form-group mb-3">
+        <label for="nome">Nome</label>
+        <input id="nome" type="text" class="form-control" formControlName="nome" placeholder="Nome completo"
+          [ngClass]="{'is-invalid': studentForm.get('nome')?.invalid && studentForm.get('nome')?.touched}">
+        <div class="invalid-feedback" *ngIf="studentForm.get('nome')?.hasError('required') && studentForm.get('nome')?.touched">
+          Nome é obrigatório.
+        </div>
+      </div>
+      
+  
+      <div class="row">
+        <div class="form-group mb-3 col-md-4">
+          <label for="cpf">CPF</label>
+          <input id="cpf" type="text" class="form-control" formControlName="cpf" placeholder="CPF"
+            [ngClass]="{'is-invalid': studentForm.get('cpf')?.invalid && studentForm.get('cpf')?.touched}">
+          <div class="invalid-feedback" *ngIf="studentForm.get('cpf')?.hasError('required') && studentForm.get('cpf')?.touched">
+            CPF é obrigatório.
+          </div>
+        </div>
+        
+  
+        <div class="form-group mb-3 col-md-4">
+          <label for="dataNascimento">Nascimento</label>
+          <input id="dataNascimento" type="date" class="form-control" formControlName="dataNascimento"
+            [ngClass]="{'is-invalid': studentForm.get('dataNascimento')?.invalid && studentForm.get('dataNascimento')?.touched}">
+          <div class="invalid-feedback" *ngIf="studentForm.get('dataNascimento')?.hasError('required') && studentForm.get('dataNascimento')?.touched">
+            Data de nascimento é obrigatória.
+          </div>
+        </div>
+        
+  
+        <div class="form-group mb-3 col-md-4">
+          <label for="turmaId">Turma</label>
+          <select id="turmaId" class="form-control" formControlName="turmaId"
+            [ngClass]="{'is-invalid': studentForm.get('turmaId')?.invalid && studentForm.get('turmaId')?.touched}">
+            <option *ngFor="let turma of turmas" [value]="turma.id">{{ turma.fim | date:'dd/MM/yyyy' }}</option>
+          </select>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="form-group mb-3 col-md-4">
+          <label for="telefone">Telefone</label>
+          <input id="telefone" type="text" class="form-control" formControlName="telefone" placeholder="(00) 00000-0000"
+            [ngClass]="{'is-invalid': studentForm.get('telefone')?.invalid && studentForm.get('telefone')?.touched}">
+          <div class="invalid-feedback" *ngIf="studentForm.get('telefone')?.hasError('required') && studentForm.get('telefone')?.touched">
+            Telefone é obrigatório.
+          </div>
+        </div>
+        
+  
+        <div class="form-group mb-3 col-md-4">
+          <label for="email">Email</label>
+          <input id="email" type="email" class="form-control" formControlName="email" placeholder="exemplo@email.com"
+            [ngClass]="{'is-invalid': studentForm.get('email')?.invalid && studentForm.get('email')?.touched}">
+        </div>
+  
+        <div class="form-group mb-3 col-md-4">
+          <label for="cidadeId">Cidade</label>
+          <select id="cidadeId" class="form-control" formControlName="cidadeId"
+            [ngClass]="{'is-invalid': studentForm.get('cidadeId')?.invalid && studentForm.get('cidadeId')?.touched}">
+            <option *ngFor="let cidade of cidades" [value]="cidade.id">{{ cidade.nome }}</option>
+          </select>
+          <div class="invalid-feedback" *ngIf="studentForm.get('cidadeId')?.hasError('required') && studentForm.get('cidadeId')?.touched">
+            Cidade é obrigatória.
+          </div>
+        </div>
+        
+      </div>
+  
+      <div class="form-group mb-4">
+        <label for="linkedIn">LinkedIn</label>
+        <input id="linkedIn" type="text" class="form-control" formControlName="linkedIn" placeholder="linkedin.com/in/usuario">
+      </div>
+  
+      <div class="text-end d-flex justify-content-end gap-2">
+        <button type="button" class="btn button_primary pe-4 ps-4 pt-2 pb-2" (click)="onCancel()">
+          <i class="pi pi-arrow-left me-2"></i> Voltar
+        </button>
+      
+        <button type="submit" class="btn button_primary pe-4 ps-4 pt-2 pb-2">
+          <i class="pi pi-check me-2"></i>
+          {{ isEditMode ? 'Salvar alterações' : 'Cadastrar aluno' }}
+        </button>
+      </div>      
+    </form>
+  </div>
+  

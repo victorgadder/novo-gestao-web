@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/novo-gestao-web",
+            "outputPath": "dist/novo-gestao-web/browser",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -32,6 +32,8 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -72,6 +74,27 @@
           },
           "defaultConfiguration": "development"
         },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/novo-gestao-web/server",
+            "main": "src/main.server.ts",
+            "tsConfig": "tsconfig.server.json"
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "sourceMap": false,
+              "optimization": true
+            },
+            "development": {
+              "outputHashing": "none",
+              "sourceMap": true,
+              "optimization": false
+            }
+          },
+          "defaultConfiguration": "production"
+        },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n"
         },
@@ -91,6 +114,7 @@
               }
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/azure-blue.css",
               "src/styles.scss"
             ],
             "scripts": []
@@ -98,5 +122,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "e267ff27-8c3b-4374-96ad-d652d4eab606"
   }
 }

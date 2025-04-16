@@ -1,0 +1,11 @@
+<div class="navbar-wrapper">
+  <p-tree
+    [value]="files"
+    class="custom-tree"
+    selectionMode="single"
+    [(selection)]="selectedFile"
+    (onNodeSelect)="onNodeSelect($event)"
+    [expandedIcon]="'pi pi-folder-open'"
+    [collapsedIcon]="'pi pi-folder'"
+  ></p-tree>
+</div>

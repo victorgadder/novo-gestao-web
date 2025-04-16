@@ -1,0 +1,21 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+      "outDir": "./dist/server",
+      "target": "ES2022",
+      "module": "NodeNext",
+      "types": [],
+      "lib": ["ES2022"],
+      "allowSyntheticDefaultImports": true,
+      "moduleResolution": "NodeNext",
+      "noEmit": false,
+      "esModuleInterop": true,
+      "importHelpers": true,
+      "skipLibCheck": true
+    },
+    "files": ["src/main.server.ts"],
+    "angularCompilerOptions": {
+      "enableServerTransition": true
+    }
+  }
+  

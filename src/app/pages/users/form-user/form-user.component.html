@@ -1,0 +1,61 @@
+<div class="container">
+  <h1 class="mb-4 titulo">{{ isEditMode ? 'Editar Usuário' : 'Novo Usuário' }}</h1>
+
+  <div class="form-group mb-4 col-md-4">
+    <div class="avatar-container" (click)="triggerFileInput()">
+      <img
+        *ngIf="avatarBase64; else defaultIcon"
+        [src]="avatarBase64"
+        class="avatar-img"
+        alt="Avatar"
+      />
+      <ng-template #defaultIcon>
+        <i class="pi pi-user avatar-icon"></i>
+      </ng-template>
+    </div>
+    <input #fileInput type="file" style="display: none;" (change)="onFileSelect($event)" />
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="mt-4" novalidate>
+    <div class="form-group mb-3">
+      <label for="nome">Nome <span class="text-danger">*</span></label>
+      <input
+        id="nome"
+        class="form-control"
+        formControlName="nome"
+        placeholder="Digite o nome completo"
+        [ngClass]="{ 'is-invalid': userForm.get('nome')?.invalid && userForm.get('nome')?.touched }"
+      />
+      <div class="invalid-feedback" *ngIf="userForm.get('nome')?.invalid && userForm.get('nome')?.touched">
+        O nome é obrigatório.
+      </div>
+    </div>
+
+    <div class="form-group mb-4">
+      <label for="email">Email <span class="text-danger">*</span></label>
+      <input
+        id="email"
+        class="form-control"
+        type="email"
+        formControlName="email"
+        placeholder="exemplo@email.com"
+        [ngClass]="{ 'is-invalid': userForm.get('email')?.invalid && userForm.get('email')?.touched }"
+      />
+      <div class="invalid-feedback" *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched">
+        <span *ngIf="userForm.get('email')?.errors?.['required']">O email é obrigatório.</span>
+        <span *ngIf="userForm.get('email')?.errors?.['email']">Formato de email inválido.</span>
+      </div>
+    </div>
+
+    <div class="text-end d-flex justify-content-end gap-2">
+      <button type="button" class="btn button_primary pe-4 ps-4 pt-2 pb-2" (click)="onCancel()">
+        <i class="pi pi-arrow-left me-2"></i> Voltar
+      </button>
+
+      <button type="submit" class="btn button_primary pe-4 ps-4 pt-2 pb-2">
+        <i class="pi pi-check me-2"></i>
+        {{ isEditMode ? 'Salvar alterações' : 'Cadastrar usuário' }}
+      </button>
+    </div>
+  </form>
+</div>

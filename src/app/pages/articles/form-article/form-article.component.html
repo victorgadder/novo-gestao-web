@@ -1,0 +1,90 @@
+<div class="container">
+  <h1 class="mb-5 titulo">{{ isEditMode ? 'Editar Artigo' : 'Novo Artigo' }}</h1>
+
+  <form [formGroup]="articleForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="form-group mb-3 col-md-6">
+        <label for="titulo">Título</label>
+        <input id="titulo" type="text" class="form-control" formControlName="titulo" placeholder="Digite o título do artigo">
+      </div>
+
+      <div class="form-group mb-3 col-md-6">
+        <label for="data">Data</label>
+        <input id="data" type="date" class="form-control" formControlName="data">
+      </div>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="resumo">Resumo</label>
+      <textarea id="resumo" class="form-control" formControlName="resumo" rows="3" placeholder="Resumo do artigo"></textarea>
+    </div>
+
+    <div class="row">
+      <div class="form-group mb-3 col-md-6">
+        <label for="imagemCapa">Imagem de Capa</label>
+        <input id="imagemCapa" type="file" class="form-control" (change)="onFileSelect($event, 'imagemCapa')">
+      </div>
+
+      <div class="form-group mb-3 col-md-6">
+        <label for="imagemPrincipal">Imagem Principal</label>
+        <input id="imagemPrincipal" type="file" class="form-control" (change)="onFileSelect($event, 'imagemPrincipal')">
+      </div>
+    </div>
+
+    <div class="form-group mb-4">
+      <label for="autorId">Autor</label>
+      <select id="autorId" class="form-control" formControlName="autorId">
+        <option *ngFor="let autor of autores" [value]="autor.id">{{ autor.nome }}</option>
+      </select>
+    </div>
+
+    <div formArrayName="itens">
+      <div *ngFor="let item of itemControls.controls; let i = index" [formGroupName]="i" class="mb-4 p-3 border rounded">
+        <strong class="d-block mb-2">Parágrafo {{i + 1}}</strong>
+
+        <div class="form-group mb-2">
+          <label>Tipo</label>
+          <select formControlName="tipo" class="form-control" (change)="onTipoChange($event, item)">
+            <option [value]="0">Texto</option>
+            <option [value]="1">Imagem</option>
+          </select>
+        </div>
+
+        <div *ngIf="item.get('tipo')?.value === 0" class="form-group">
+          <label>Texto</label>
+          <textarea formControlName="texto" class="form-control" rows="5" placeholder="Texto do parágrafo"></textarea>
+        </div>
+
+        <div *ngIf="item.get('tipo')?.value === 1" class="form-group">
+          <label>Imagem</label>
+          <input type="file" class="form-control" (change)="onFileSelect($event, 'imagem', i)">
+        </div>
+
+        <div class="text-end">
+          <button type="button" class="btn btn-outline-danger mt-3" (click)="removeItem(i)">Remover Parágrafo</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-between mt-4">
+      
+
+      <div class="d-flex gap-2">
+        <button type="button" class="btn btn-outline-secondary" (click)="addItem()">
+          <i class="pi pi-plus me-2"></i> Adicionar Parágrafo
+        </button>
+        
+        <button type="button" class="btn button_primary pe-4 ps-4 pt-2 pb-2" (click)="onCancel()">
+          <i class="pi pi-arrow-left me-2"></i> Voltar
+        </button>
+
+        <button type="submit" class="btn button_primary pe-4 ps-4 pt-2 pb-2">
+          <i class="pi pi-check me-2"></i>
+          {{ isEditMode ? 'Salvar alterações' : 'Cadastrar artigo' }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<pre>Artigo: {{ articleForm.getRawValue() | json }}</pre>

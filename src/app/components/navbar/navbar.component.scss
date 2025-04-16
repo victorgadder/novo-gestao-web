@@ -1,0 +1,21 @@
+.navbar-wrapper {
+  padding: 0 1rem;
+
+  .custom-tree {
+    background: transparent;
+    border-radius: 8px;
+
+    .p-treenode-label {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .p-tree-toggler {
+      margin-right: 0.5rem;
+    }
+
+    .pi {
+      margin-right: 0.5rem;
+    }
+  }
+}

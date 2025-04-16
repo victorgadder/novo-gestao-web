@@ -1,0 +1,38 @@
+<mat-sidenav-container class="layout-container">
+  <mat-sidenav #sidenav class="sidenav" [mode]="sidenavMode" [(opened)]="opened">
+    <app-navbar></app-navbar>
+  </mat-sidenav>
+
+  <mat-sidenav-content class="sidenav-content">
+    <mat-toolbar color="primary" class="main-toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()" class="menu-button">
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <button mat-icon-button (click)="toggleTheme()" class="theme-toggle">
+        <mat-icon>{{ isDarkTheme ? 'light_mode' : 'dark_mode' }}</mat-icon>
+      </button>
+
+      <img src="assets/logo.svg" alt="Logo" class="logo" />
+
+      <span class="spacer"></span>
+
+      <div class="toolbar-actions">
+        <button
+        #userBtn
+        pButton
+        type="button"
+        icon="pi pi-user"
+        class="user-button"
+        [label]="userName"
+        (click)="showUserMenu($event)"
+        ></button>
+        <p-contextMenu #contextMenu [model]="itemsMobile"></p-contextMenu>
+      </div>
+    </mat-toolbar>
+
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

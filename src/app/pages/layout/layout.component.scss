@@ -1,0 +1,173 @@
+.layout-container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 769px) {
+    flex-direction: column;
+  }
+}
+
+.sidenav {
+  width: 250px;
+  background: linear-gradient(135deg, #000000, #f3ef18);
+  padding: 1rem 0;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+
+  @media (min-width: 769px) {
+    // position: absolute;
+    top: 64px; // altura da toolbar
+    // left: 0;
+    // height: calc(100vh - 64px);
+  }
+}
+
+.main-toolbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  height: 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #5fa3e7;
+  color: white;
+  padding: 0 1rem;
+  
+  .menu-button {
+    display: inline-flex;
+    border: none;
+    border-radius: 4px;
+  }
+
+  .logo {
+    height: 40px;
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .spacer {
+    flex: 1 1 auto;
+  }
+
+  .toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-left: auto;
+  }
+
+  .user-button {
+    background: white;
+    color: #0d47a1;
+    font-weight: bold;
+    border-radius: 14px;
+    border: none;
+  }
+
+  .theme-toggle {
+    transform: scale(0.8);
+    margin-left: 0.25rem;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px;
+    border-radius: 3px;
+  }
+
+  @media (max-width: 768px) {
+    
+    ::ng-deep .p-contextmenu {
+      font-size: 0.8rem !important;
+      min-width: 140px !important;
+      padding: 0.25rem 0 !important;
+    }
+  
+    ::ng-deep .p-contextmenu .p-menuitem {
+      padding: 0.4rem 1rem !important;
+    }
+  
+    ::ng-deep .p-contextmenu .p-menuitem-text {
+      font-size: 0.8rem !important;
+    }
+  
+    ::ng-deep .p-contextmenu .p-menuitem-icon {
+      font-size: 1rem !important;
+      margin-right: 0.5rem !important;
+    } 
+    
+    .menu-button {
+      display: inline-flex;
+    }
+
+    .logo {
+      margin-left: 0;
+    }
+
+    .theme-toggle {
+      transform: scale(0.6);
+      margin-left: 0.25rem;
+    }
+
+    .toolbar-actions {
+      gap: 0.25rem;
+  
+      // Reduz o botão visualmente de forma segura
+      .user-button {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.5rem;
+        icon-size: 16px;
+      }
+    }
+  }
+}
+
+.sidenav-content {
+  flex: 1;
+  margin-top: 64px;
+  transition: margin-left 0.3s ease;
+
+  @media (min-width: 769px) {
+    margin-left: 0px;
+  }
+}
+
+.main-content {
+  padding: 1.5rem;
+  background: #fafafa;
+  min-height: calc(100vh - 64px);
+}
+
+.light-theme {
+  --bg-color: #fafafa;
+  --text-color: #000;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+.dark-theme {
+  --bg-color: #121212;
+  --text-color: #fff;
+
+  .main-toolbar {
+    background: #1e1e1e;
+    color: white;
+  }
+
+  .main-content {
+    background: var(--bg-color);
+    color: var(--text-color);
+  }
+
+  .user-button {
+    background: #333;
+    color: #fff;
+  }
+}
+
+

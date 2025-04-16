@@ -1,0 +1,53 @@
+<div class="page-container">
+    <div class="d-flex justify-content-between align-items-center flex-wrap mb-4 header-actions">
+      <h2 class="page-title">Alunos Cadastrados</h2>
+      <button class="btn btn-primary new-user-btn" [routerLink]="['/home/students/new']">
+        <i class="pi pi-user-plus me-2"></i> Novo Aluno
+      </button>
+    </div>
+  
+    <p-table
+      [value]="studentslist"
+      [rows]="rows"
+      [totalRecords]="total"
+      [paginator]="true"
+      [lazy]="true"
+      selectionMode="single"
+      (onPage)="pageChange($event)"
+      class="p-datatable-striped p-datatable-sm responsive-table"
+      [tableStyle]="{ 'min-width': '300px' }"
+      [rowsPerPageOptions]="[5, 10, 20]"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 25%">Nome Completo</th>
+          <th style="width: 15%">CPF</th>
+          <th style="width: 25%">Email</th>
+          <th style="width: 15%">Data de Nascimento</th>
+          <th style="width: 10%">Status</th>
+          <th style="width: 10%">Ações</th>
+        </tr>
+      </ng-template>
+  
+      <ng-template pTemplate="body" let-student>
+        <tr>
+          <td>{{ student.nome }}</td>
+          <td>{{ student.cpf }}</td>
+          <td>{{ student.email }}</td>
+          <td>{{ formatarData(student.dataNascimento) }}</td>
+          <td>
+            <p-inputSwitch [(ngModel)]="student.ativo" (onChange)="toggleStatus(student)"></p-inputSwitch>
+          </td>
+          <td class="d-flex gap-2 flex-wrap">
+            <button class="btn btn-outline-primary btn-sm" (click)="editStudent(student.id)">
+              <mat-icon fontIcon="edit" class="me-1"></mat-icon> Editar
+            </button>
+            <button class="btn btn-outline-danger btn-sm" (click)="deleteStudent(student.id)">
+              <mat-icon fontIcon="delete" class="me-1"></mat-icon> Excluir
+            </button>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  
