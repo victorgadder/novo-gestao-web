@@ -5,7 +5,8 @@
 
   <mat-sidenav-content class="sidenav-content">
     <mat-toolbar color="primary" class="main-toolbar">
-      <button mat-icon-button (click)="sidenav.toggle()" class="menu-button">
+      <!-- Corrigido aqui: -->
+      <button mat-icon-button (click)="toggleSidenav()" class="menu-button">
         <mat-icon>menu</mat-icon>
       </button>
 
@@ -19,13 +20,13 @@
 
       <div class="toolbar-actions">
         <button
-        #userBtn
-        pButton
-        type="button"
-        icon="pi pi-user"
-        class="user-button"
-        [label]="userName"
-        (click)="showUserMenu($event)"
+          #userBtn
+          pButton
+          type="button"
+          icon="pi pi-user"
+          class="user-button"
+          [label]="userName"
+          (click)="toggleUserMenu($event)"
         ></button>
         <p-contextMenu #contextMenu [model]="itemsMobile"></p-contextMenu>
       </div>

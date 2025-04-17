@@ -1,27 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
 @import 'primeicons/primeicons.css';
+
+/* 🎨 VARIÁVEIS DE TEMA */
+body.light-theme {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --primary-bg: #f9f9f9;
+  --hover-bg: #f2f2f2;
+  --box-shadow-color: rgba(0, 0, 0, 0.466);
+}
+
+body.dark-theme {
+  --background-color: #121212;
+  --text-color: #ffffff;
+  --primary-bg: #1e1e1e;
+  --hover-bg: #2a2a2a;
+  --box-shadow-color: rgba(255, 255, 255, 0.1);
+}
 
 html, body {
   height: 100%;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  transition: background-color 0.3s, color 0.3s;
 }
 
+/* Estilo do container principal */
 .page-container {
   padding: 2rem;
-  background-color: #fff;
+  background-color: var(--background-color);
   border-radius: 12px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.466);
+  box-shadow: 0 0 10px var(--box-shadow-color);
   margin: 1rem;
   overflow-x: auto;
+  color: var(--text-color);
 }
 
 .page-title {
   font-weight: 600;
-  color: #2e2e2e;
+  color: var(--text-color);
   margin-bottom: 0;
 }
 
@@ -35,28 +56,31 @@ body {
   white-space: nowrap;
 }
 
+/* Tabela responsiva com suporte ao tema */
 .responsive-table {
   width: 100%;
   border-radius: 8px;
   overflow: hidden;
 
   ::ng-deep .p-datatable-thead > tr > th {
-    background-color: #f9f9f9;
+    background-color: var(--primary-bg);
     font-weight: 500;
+    color: var(--text-color);
   }
 
   ::ng-deep .p-datatable-tbody > tr:hover {
-    background-color: #f2f2f2;
+    background-color: var(--hover-bg);
   }
 }
 
-/* FORMULÁRIOS PADRÃO DO PROJETO */
+/* FORMULÁRIOS */
 form {
   .form-group {
     label {
       font-weight: 500;
       margin-bottom: 0.5rem;
       display: block;
+      color: var(--text-color);
     }
 
     input.form-control,
@@ -65,6 +89,8 @@ form {
       border: 1px solid #ced4da;
       padding: 0.5rem 0.75rem;
       font-size: 1rem;
+      background-color: var(--background-color);
+      color: var(--text-color);
     }
 
     input.form-control:focus,
@@ -134,7 +160,6 @@ form {
   }
 }
 
-
 /* 🔽 Ajustes específicos para MOBILE */
 @media (max-width: 768px) {
   ::ng-deep .p-datatable th,
@@ -163,5 +188,5 @@ form {
 
 input[formControlName="dataNascimento"].is-invalid {
   background-image: none !important;
-  padding-right: 0.75rem; // mantém padding uniforme mesmo sem ícone
+  padding-right: 0.75rem;
 }

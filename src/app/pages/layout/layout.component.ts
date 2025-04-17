@@ -1,5 +1,11 @@
-import { Component, OnInit, ViewChild, HostBinding, HostListener } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  HostBinding,
+  HostListener
+} from '@angular/core';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav'; // necessário para o ViewChild funcionar corretamente
 import { Router, NavigationEnd, RouterLink, RouterOutlet } from '@angular/router';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
 import { CommonModule } from '@angular/common';
@@ -45,20 +51,17 @@ export class LayoutComponent implements OnInit {
   isDarkTheme = false;
 
   @ViewChild('contextMenu') contextMenu!: TieredMenu;
-  showUserMenu(event: MouseEvent): void {
-    event.preventDefault(); // evita comportamento inesperado
-    this.contextMenu.show(event);
-  }
+
+  // ✅ Pega a referência do sidenav com ViewChild corretamente
+  @ViewChild('sidenav') sidenav!: MatSidenav;
+
   @HostBinding('class') componentCssClass: string = 'light-theme';
-window: any;
-sidenav: any;
 
   constructor(
     private authService: AuthService,
     private userService: UsersService,
     private router: Router
   ) {
-    // Fecha o menu automaticamente em telas menores ao navegar
     this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
@@ -69,6 +72,9 @@ sidenav: any;
   }
 
   ngOnInit(): void {
+    const theme = localStorage.getItem('theme');
+    this.isDarkTheme = theme === 'dark';
+    document.body.classList.add(this.isDarkTheme ? 'dark-theme' : 'light-theme');
     this.opened = window.innerWidth > 768;
 
     const storedUser = localStorage.getItem('userInfo');
@@ -102,7 +108,15 @@ sidenav: any;
 
   toggleTheme(): void {
     this.isDarkTheme = !this.isDarkTheme;
-    this.componentCssClass = this.isDarkTheme ? 'dark-theme' : 'light-theme';
+
+    const body = document.body;
+    if (this.isDarkTheme) {
+      body.classList.add('dark-theme');
+      body.classList.remove('light-theme');
+    } else {
+      body.classList.remove('dark-theme');
+      body.classList.add('light-theme');
+    }
   }
 
   logout(): void {
@@ -120,23 +134,24 @@ sidenav: any;
       this.router.navigate(['/home/profile']);
     }
   }
-  
 
   toggleUserMenu(event: Event): void {
     this.contextMenu.toggle(event);
   }
 
-  // Getter que calcula dinamicamente o modo do sidenav com base na largura da tela
+  // ✅ Adiciona o método de toggle para ser chamado no HTML
+  toggleSidenav(): void {
+    this.sidenav.toggle();
+  }
+
   get sidenavMode(): 'side' | 'over' {
     return window.innerWidth > 768 ? 'side' : 'over';
   }
 
-  // Atualiza o estado inicial do sidenav com base na largura da tela
   updateSidenavMode(): void {
     this.opened = window.innerWidth > 768;
   }
 
-  // Detecta redimensionamento da janela para atualizar a abertura do sidenav se necessário
   @HostListener('window:resize', ['$event'])
   onResize(event: UIEvent) {
     this.updateSidenavMode();
